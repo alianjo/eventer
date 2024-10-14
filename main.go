@@ -14,6 +14,12 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
+func init() {
+	if os.Getenv("TELEGRAM_CHANNEL_ID") == "" || os.Getenv("TELEGRAM_BOT_TOKEN") == "" {
+		log.Fatal("TELEGRAM_CHANNEL_ID or TELEGRAM_BOT_TOKEN environment variable is not set")
+	}
+}
+
 func main() {
 	// Create a new config
 	config, err := rest.InClusterConfig()
