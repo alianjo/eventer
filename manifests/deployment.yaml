@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eventer
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: event-sender
+  namespace: eventer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: eventer
+  name: eventer
+  namespace: eventer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventer
+  template:
+    metadata:
+      labels:
+        app: eventer
+    spec:
+      serviceAccountName: event-sender
+      containers:
+      - image: alianjo178/eventer
+        name: eventer
+        env:
+        - name: TELEGRAM_CHANNEL_ID
+          value: "chat_id"
+        - name: TELEGRAM_BOT_TOKEN
+          value: "your_bot_token"

@@ -1,0 +1,43 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: event-reader
+  namespace: eventer
+rules:
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: event-reader-binding
+  namespace: eventer
+roleRef:
+  name: event-reader
+  kind: Role
+subjects:
+- kind: ServiceAccount
+  name: event-sender
+  namespace: eventer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: event-reader-cluster
+rules:
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: event-reader-cluster-binding
+roleRef:
+  name: event-reader-cluster
+  kind: ClusterRole
+subjects:
+- kind: ServiceAccount
+  name: event-sender
+  namespace: eventer
